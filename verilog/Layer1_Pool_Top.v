@@ -20,20 +20,20 @@
 //////////////////////////////////////////////////////////////////////////////////
 module Layer1_Pool_Top
 #(
-	parameter									bits						=	16		,	//quantization bit number
-	parameter									bits_shift				=	4		,	//we can shift but not multy
-	parameter									channel_bits			=	64		,	//channel_out_num*bits
-	parameter									channel_bits_shift	=	6		,
-	parameter									channel_in_num			=	64		,
-	parameter									channel_out_num		=	16	
+	parameter						bits			=	16		,	//quantization bit number
+	parameter						bits_shift		=	4		,	//we can shift but not multy
+	parameter						channel_bits		=	64		,	//channel_out_num*bits
+	parameter						channel_bits_shift	=	6		,
+	parameter						channel_in_num		=	64		,
+	parameter						channel_out_num		=	16	
 	)
 	(
-	input																clk_in,
-	input 															rst_n,
+	input								clk_in,
+	input 								rst_n,
 	input 	[(channel_in_num<<bits_shift)-1:0]			data_in,
-	input																start,
+	input								start,
 	output	[(channel_out_num<<bits_shift)-1:0]			data_out,
-	output															ready
+	output								ready
     );
 
 integer w_file;
@@ -44,7 +44,7 @@ begin
 end 
 
 wire			ready_temp[0:channel_out_num-1];
-assign		ready						=					ready_temp[0]					;
+assign			ready				 =		ready_temp[0]					;
 genvar i;
 generate
 	for (i = 0; i < channel_out_num; i = i + 1)
