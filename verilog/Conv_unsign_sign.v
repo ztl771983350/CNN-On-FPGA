@@ -36,7 +36,7 @@ module Conv_unsign_sign#(
 	//enable conv
 	input 				start			,
 	//deature map output 
-	output reg signed	[(bits<<1)+filter_size_2:0]	data_out		,
+		output reg signed	[(bits<<1)+filter_size_2:0]	data_out		,//疑惑？？？？data_out的位数设置是处于什么考虑
 	//enable next module
 	output reg			ready
 	);
