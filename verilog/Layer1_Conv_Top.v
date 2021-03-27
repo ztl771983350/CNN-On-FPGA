@@ -56,12 +56,12 @@ wire				[bits-1:0]				weight_in_conv			[0:channel_num-1]			;
 wire	signed	[(bits<<1)-1+filter_size_2:0]				data_conv				[0:conv_num-1]				;
 wire									ready_conv				[0:conv_num-1]				;
 assign 									ready			=		ready_conv[0]				;
-wire	signed	[(bits<<1)-1:0]		bias				[0:channel_num-1]			;
+wire	signed	[(bits<<1)-1:0]	bias					[0:channel_num-1]			;
 wire				[pool_channel_bits-1:0]data_temp	[0:pool_channel-1]		;
-assign										bias[3]		=			32'b00100010001011000011010000000000	;																				 
-assign										bias[2]		=			32'b00000110100101101100110010111000	;
-assign										bias[1]		=			32'b00001001111010011000011110110000	;
-assign										bias[0]		=			32'b00011001011001001000001101100000	;
+assign				bias[3]		=			32'b00100010001011000011010000000000	;																				 
+assign				bias[2]		=			32'b00000110100101101100110010111000	;
+assign				bias[1]		=			32'b00001001111010011000011110110000	;
+assign				bias[0]		=			32'b00011001011001001000001101100000	;
 genvar i,j,k,l,r,s,t,u,v;
 generate
 	for(i = 0; i < channel_num; i = i + 1)
