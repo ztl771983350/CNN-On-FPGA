@@ -28,31 +28,31 @@ module Conv_unsign_sign#(
 	(
 	//system clock
 	input		 		clk_in		,
-	input		 		rst_n			,
+	input		 		rst_n		,
 	//feature map input & bias & weight
-	input signed	[bits-1:0]	data_in		,	
-	input signed   [(bits<<1)-1:0]	bias			,
-	input	signed	[bits-1:0]	weight		,
+	input signed	[bits-1:0]	data_in		,    //每次data_in一个16bit的数
+	input signed    [(bits<<1)-1:0]	bias		,   //每次 bias一个 32bit的数
+	input signed	[bits-1:0]	weight		,   //每次weight一个16bit的数
 	//enable conv
-	input 				start			,
+	input 				start		,
 	//deature map output 
-		output reg signed	[(bits<<1)+filter_size_2:0]	data_out		,//疑惑？？？？data_out的位数设置是处于什么考虑
+	output reg signed		[(bits<<1)+filter_size_2:0]	data_out,     //疑惑？？？？data_out的位数设置是处于什么考虑
 	//enable next module
 	output reg			ready
 	);
 	
-reg signed	[(bits<<1)-1+filter_size_2:0]	 add_result;
-wire signed	[bits-1:0]			a;
-wire signed	[bits-1:0]			b;
-wire signed	[(bits<<1)-1:0]		        p;
+reg signed	[(bits<<1)-1+filter_size_2:0]	add_result; //加和的一个暂存变量，因为要不止调用一次Conv_unsign_sign函数
+wire signed	[bits-1:0]			a;	//其中的一个乘数 16bit
+wire signed	[bits-1:0]			b;	//另外一个个乘数 16bit
+wire signed	[(bits<<1)-1:0]		        p;	//两个乘数的积 32bit
 assign 	a 	= 	                        data_in;
 assign 	b 	= 	                        weight;
 reg 						flag;
-reg 		[filter_size_2-1:0]cnt;
+reg 		[filter_size_2-1:0]		cnt;
 reg		[1:0]				out_flag;
 reg					        out_ready;
-reg signed	[(bits<<1)-1+filter_size_2:0]	temp_out;
-reg				[1:0]		out_cnt;
+reg signed	[(bits<<1)-1+filter_size_2:0]	temp_out;//所有乘法的加和完成时，的整个加和
+reg		[1:0]				out_cnt;
 reg						start_delay1;
 reg						start_delay2;
 
@@ -100,7 +100,7 @@ begin
 			end
 			else if(cnt < filter_size-1)
 			begin
-				cnt				<=      cnt	+	1'b1;
+				cnt				<=      cnt		+	1'b1;
 				add_result			<=	add_result	+	p;
 				flag				<=       1'b1;
 			end
@@ -108,7 +108,7 @@ begin
 			begin
 				add_result			<=	add_result	+	p;
 				flag				<=      1'b0;
-				temp_out			<=	add_result  +	p;
+				temp_out			<=	add_result      +	p;
 				cnt				<=      1'b0;
 			end
 		end
@@ -124,7 +124,7 @@ begin
 	end
 	else
 	begin
-		out_flag 		        <=		{out_flag[0],flag};
+		out_flag 		        <=			{out_flag[0],flag};
 		if(out_flag[0]&&(~flag))
 		begin
 			out_ready	        <=			1'b1;
@@ -135,7 +135,7 @@ begin
 			begin
 				ready				<=      1'b1;	
 				data_out 			<=	temp_out  +  bias;				
-				out_cnt		 		<=	out_cnt  +  1'b1;			
+				out_cnt		 		<=	out_cnt   +  1'b1;			
 			end
 			else if(out_cnt == 2'd1)
 			begin
