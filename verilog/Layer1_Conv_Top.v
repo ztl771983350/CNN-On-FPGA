@@ -64,7 +64,7 @@ assign				bias[2]		=			32'b00000110100101101100110010111000	;
 assign				bias[1]		=			32'b00001001111010011000011110110000	;
 assign				bias[0]		=			32'b00011001011001001000001101100000	;
 genvar i,j,k,l,r,s,t,u,v;
-generate
+generate                                ///////////这相当于一梭子同时运行 64个乘法运算，并行！！(当然也都加起来)
 	for(i = 0; i < channel_num; i = i + 1)           //4个卷积核的遍历循环
 	begin:conv_channel
 		for(l = 0; l < channel_in_num; l = l + 1)    //对输入16个16bit的data_in的循环，接入模块 Conv_unsign_sign 
