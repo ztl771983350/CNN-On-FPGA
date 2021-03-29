@@ -22,17 +22,17 @@ module Layer1_Pool_Top
 #(
 	parameter						bits			=	16		,	//quantization bit number
 	parameter						bits_shift		=	4		,	//we can shift but not multy
-	parameter						channel_bits		=	64		,	//channel_out_num*bits
-	parameter						channel_bits_shift	=	6		,
-	parameter						channel_in_num		=	64		,
-	parameter						channel_out_num		=	16	
+	parameter						channel_bits		=	64		,	//channel_out_num*bits   
+	parameter						channel_bits_shift	=	6		,      //第一层的conv一次性计算了16个数，再*layer1conv的4个输出通道
+	parameter						channel_in_num		=	64		,      //也就是一次性输入了64个数
+	parameter						channel_out_num		=	16	                
 	)
 	(
 	input								clk_in,
 	input 								rst_n,
-	input 	[(channel_in_num<<bits_shift)-1:0]			data_in,
+	input 	[(channel_in_num<<bits_shift)-1:0]			data_in,      //输入时64个16bit的数，就是layer1conv 同时并行计算的16组卷积*4个卷积核
 	input								start,
-	output	[(channel_out_num<<bits_shift)-1:0]			data_out,
+	output	[(channel_out_num<<bits_shift)-1:0]			data_out, 
 	output								ready
     );
 
@@ -47,7 +47,7 @@ wire			ready_temp[0:channel_out_num-1];
 assign			ready				 =		ready_temp[0]					;
 genvar i;
 generate
-	for (i = 0; i < channel_out_num; i = i + 1)
+	for (i = 0; i < channel_out_num; i = i + 1)         //layer1pool 输出的16个数，2*2*4
 	begin:pooling
 		maxpool_one_clk layer_pool(
 			.clk_in			(clk_in),
