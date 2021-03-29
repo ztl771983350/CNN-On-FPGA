@@ -17,6 +17,7 @@
 // Revision 0.01 - File Created
 // Additional Comments: 
 //
+//不断的向layer1 conv层输入16个数，每个clock都输入16个数。
 //////////////////////////////////////////////////////////////////////////////////
 module pic_in
 #(
