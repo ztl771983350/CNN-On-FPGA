@@ -85,15 +85,15 @@ generate                                ///////////这相当于一梭子同时�
 		end
 	end
 	
-	for (r = 0; r < pool_channel_heignt; r = r + 1)
+	for (r = 0; r < pool_channel_heignt; r = r + 1)      //2
 	begin:data_temp1
-		for (s = 0; s < pool_channel_length; s = s + 1)
+		for (s = 0; s < pool_channel_length; s = s + 1)       //2
 		begin:data_temp2
-			for (v = 0; v < channel_num; v = v + 1)
+			for (v = 0; v < channel_num; v = v + 1)                //4：layer1conv是channel out number是4
 			begin:data_temp3
-				for (t = 0; t < pool_stride_num_height; t = t + 1)
+				for (t = 0; t < pool_stride_num_height; t = t + 1)    //2
 				begin:data_temp4
-					for (u = 0; u < pool_stride_num_length; u = u + 1)
+					for (u = 0; u < pool_stride_num_length; u = u + 1)   //2
 					begin:data_temp5
 						assign data_temp[r*pool_channel_length+s][((v*pool_stride_num_length*pool_stride_num_height+(t*pool_stride_num_length+u))<<bits_shift)+bits-1:((v*pool_stride_num_length*pool_stride_num_height+(t*pool_stride_num_length+u))<<bits_shift)]    =
 								 (data_conv[v*channel_in_num+((r*pool_stride_num_height+t)*pool_channel_length*pool_stride_num_length+s*pool_stride_num_length+u)]>0)?
@@ -103,7 +103,7 @@ generate                                ///////////这相当于一梭子同时�
 			end
 		end
 	end
-	for (l = 0; l < pool_channel; l = l + 1) 
+	for (l = 0; l < pool_channel; l = l + 1)     //4,第一层的池化的输入channel number
 	begin:output_data
 		always@(posedge clk_in)
 		begin
@@ -111,7 +111,7 @@ generate                                ///////////这相当于一梭子同时�
 		end
 	end
 	
-	for(j = 0; j < channel_in_num; j = j + 1)
+	for(j = 0; j < channel_in_num; j = j + 1)      //16,同时输入 16个数
 	begin:conv_data_in
 		assign data_in_conv[j]			=			data_in[(j<<bits_shift)+bits-1:(j<<bits_shift)]	;
 	end
