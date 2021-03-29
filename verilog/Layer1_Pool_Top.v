@@ -52,7 +52,7 @@ generate
 		maxpool_one_clk layer_pool(
 			.clk_in			(clk_in),
 			.rst_n			(rst_n),
-			.data_in			(data_in[(i<<channel_bits_shift)+channel_bits-1:(i<<channel_bits_shift)]),
+			.data_in		(data_in[(i<<channel_bits_shift)+channel_bits-1:(i<<channel_bits_shift)]),   //一次输入4个数字。
 			.start			(start),
 			.data_out		(data_out[(i<<bits_shift)+bits-1:(i<<bits_shift)]),
 			.ready			(ready_temp[i])
