@@ -35,9 +35,9 @@ module Layer2_Conv_Top#(
 	(
 	input								clk_in,
 	input 								rst_n,
-	input 		[(channel_in_num<<bits_shift)-1:0]		data_in,
+	input 		[(channel_in_num<<bits_shift)-1:0]		data_in,    //也是一口气输入了16个16bit的数
 	input								start,
-	input		[(weight_num<<bits_shift)-1:0]			weights,
+	input		[(weight_num<<bits_shift)-1:0]			weights,   //32个16bit的数 ：每一个卷积核的每一层分配一个参数
 	output	reg	 [(channel_out_num<<bits_shift)-1:0]		data_out,
 	output								ready
     );
@@ -61,12 +61,12 @@ assign					bias[1]		=			32'b11111111011000010011100110110010	;
 assign					bias[0]		=			32'b00000101100110100110000001011000	;
 genvar i,j,k,l,m,n;
 generate
-	for(i = 0; i < channel_num; i = i + 1)
+	for(i = 0; i < channel_num; i = i + 1)   //8
 	begin:conv_channel_1
-		for(l = 0; l < channel_para_num; l = l + 1)
+		for(l = 0; l < channel_para_num; l = l + 1)    //4
 		begin:conv_channel_2
-			for (m = 0; m < channel_serial_num; m = m + 1)
-			begin:conv_channel_3
+			for (m = 0; m < channel_serial_num; m = m + 1)    //4   最后相当于，一口气进行4组卷积。
+			begin:conv_channel_3 
 				Conv_unsign_sign layer_conv(
 					.clk_in			(clk_in)												,
 					.rst_n			(rst_n)												,
